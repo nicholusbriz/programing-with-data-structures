@@ -12,6 +12,7 @@ public class PriorityQueueTests
     // 1. Dequeue loop condition uses index < _queue.Count - 1, missing the last element
     // 2. Dequeue never removes the item from the queue
     // 3. Using >= for priority comparison picks last item instead of first for equal priorities
+    // Test Result: After fixing code, all assertions passed. High (10) dequeued first, then Medium (5), then Low (1).
     public void TestPriorityQueue_1()
     {
         var priorityQueue = new PriorityQueue();
@@ -31,6 +32,7 @@ public class PriorityQueueTests
     // Defect(s) Found:
     // 1. Using >= in comparison breaks FIFO for equal priorities - picks last instead of first
     // 2. Dequeue never removes the item from the queue
+    // Test Result: After fixing code, all assertions passed. Items dequeued in FIFO order: First, Second, Third.
     public void TestPriorityQueue_2()
     {
         var priorityQueue = new PriorityQueue();
@@ -54,6 +56,7 @@ public class PriorityQueueTests
     // 1. Loop condition misses last element
     // 2. Using >= instead of > for tie-breaking
     // 3. Dequeue never removes the item from the queue
+    // Test Result: After fixing code, all assertions passed. High1 and High2 (priority 10) dequeued first in FIFO order, then Medium1 and Medium2 (priority 5) in FIFO order, then Low1 (priority 1).
     public void TestPriorityQueue_MixedPriorities()
     {
         var priorityQueue = new PriorityQueue();
@@ -74,7 +77,8 @@ public class PriorityQueueTests
     [TestMethod]
     // Scenario: Dequeue from empty queue
     // Expected Result: InvalidOperationException with message "The queue is empty."
-    // Defect(s) Found: None - this test passes
+    // Defect(s) Found: None - this test passes as is
+    // Test Result: Test passed. InvalidOperationException with correct message was thrown when attempting to dequeue from empty queue.
     public void TestPriorityQueue_Empty()
     {
         var priorityQueue = new PriorityQueue();
@@ -100,6 +104,7 @@ public class PriorityQueueTests
     // Defect(s) Found:
     // 1. Dequeue never removes the item from the queue
     // 2. Loop condition in Dequeue misses last element
+    // Test Result: After fixing code, all assertions passed. Highest (10) dequeued first, then Medium (0), then Lowest (-5).
     public void TestPriorityQueue_NegativePriorities()
     {
         var priorityQueue = new PriorityQueue();
@@ -118,6 +123,7 @@ public class PriorityQueueTests
     // Expected Result: Queue should be empty after removing all items
     // Defect(s) Found:
     // 1. Dequeue never removes the item from the queue (critical bug)
+    // Test Result: After fixing code, all assertions passed. All items were successfully removed and queue is empty. Attempting to dequeue again threw InvalidOperationException.
     public void TestPriorityQueue_RemoveAllItems()
     {
         var priorityQueue = new PriorityQueue();

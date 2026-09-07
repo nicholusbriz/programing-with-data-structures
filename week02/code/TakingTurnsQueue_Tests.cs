@@ -15,6 +15,7 @@ public class TakingTurnsQueueTests
     // 1. PersonQueue.Enqueue() adds to front of list instead of back, causing LIFO instead of FIFO behavior
     // 2. GetNextPerson() only re-adds person if Turns > 1, but should also re-add if Turns <= 0 (infinite)
     // 3. GetNextPerson() decrements Turns for infinite turn people (Turns <= 0)
+    // Test Result: After fixing code, all assertions passed. Queue emptied correctly with expected sequence.
     public void TestTakingTurnsQueue_FiniteRepetition()
     {
         var bob = new Person("Bob", 2);
@@ -50,6 +51,7 @@ public class TakingTurnsQueueTests
     // 1. Same defects as above: PersonQueue.Enqueue() adds to front instead of back
     // 2. GetNextPerson() doesn't handle infinite turns (Turns <= 0) properly
     // 3. People with infinite turns should never have their Turns value changed
+    // Test Result: After fixing code, all assertions passed. Queue emptied correctly with expected sequence including George added midway.
     public void TestTakingTurnsQueue_AddPlayerMidway()
     {
         var bob = new Person("Bob", 2);
@@ -95,6 +97,7 @@ public class TakingTurnsQueueTests
     // 1. PersonQueue.Enqueue() adds to front of list, causing incorrect order
     // 2. GetNextPerson() doesn't check for infinite turns (Turns <= 0) before decrementing
     // 3. People with infinite turns (Turns <= 0) should be re-added to queue
+    // Test Result: After fixing code, all assertions passed. First 10 matches expected sequence. Infinite turn person (Tim with 0 turns) still has 0 turns after multiple dequeues.
     public void TestTakingTurnsQueue_ForeverZero()
     {
         var timTurns = 0;
@@ -129,6 +132,7 @@ public class TakingTurnsQueueTests
     // 1. PersonQueue.Enqueue() adds to front instead of back (same issue)
     // 2. GetNextPerson() doesn't handle negative turns as infinite properly
     // 3. Negative turns (Turns <= 0) should indicate infinite turns and never be decremented
+    // Test Result: After fixing code, all assertions passed. First 10 matches expected sequence. Infinite turn person (Tim with -3 turns) still has -3 turns after multiple dequeues.
     public void TestTakingTurnsQueue_ForeverNegative()
     {
         var timTurns = -3;
@@ -156,6 +160,7 @@ public class TakingTurnsQueueTests
     // Scenario: Try to get the next person from an empty queue
     // Expected Result: Exception should be thrown with appropriate error message.
     // Defect(s) Found: None - this test passes as is
+    // Test Result: Test passed. InvalidOperationException with correct message "No one in the queue." was thrown when attempting to get next person from empty queue.
     public void TestTakingTurnsQueue_Empty()
     {
         var players = new TakingTurnsQueue();
