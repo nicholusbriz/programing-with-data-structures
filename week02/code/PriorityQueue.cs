@@ -4,7 +4,7 @@
 
     /// <summary>
     /// Add a new value to the queue with an associated priority.  The
-    /// node is always added to the back of the queue regardless of 
+    /// node is always added to the back of the queue regardless of
     /// the priority.
     /// </summary>
     /// <param name="value">The value</param>
@@ -23,15 +23,19 @@
         }
 
         // Find the index of the item with the highest priority to remove
+        // If multiple items have same priority, pick the first one (FIFO)
         var highPriorityIndex = 0;
-        for (int index = 1; index < _queue.Count - 1; index++)
+        // FIXED: Loop should go to < _queue.Count (was missing the last element)
+        for (int index = 1; index < _queue.Count; index++)
         {
-            if (_queue[index].Priority >= _queue[highPriorityIndex].Priority)
+            // FIXED: Use > instead of >= to maintain FIFO for equal priorities
+            if (_queue[index].Priority > _queue[highPriorityIndex].Priority)
                 highPriorityIndex = index;
         }
 
-        // Remove and return the item with the highest priority
+        // FIXED: Remove and return the item with the highest priority
         var value = _queue[highPriorityIndex].Value;
+        _queue.RemoveAt(highPriorityIndex); // This line was missing
         return value;
     }
 

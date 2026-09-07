@@ -1,8 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 // TODO Problem 1 - Run test cases and record any defects the test code finds in the comment above the test method.
-// DO NOT MODIFY THE CODE IN THE TESTS in this file, just the comments above the tests. 
-// Fix the code being tested to match requirements and make all tests pass. 
+// DO NOT MODIFY THE CODE IN THE TESTS in this file, just the comments above the tests.
+// Fix the code being tested to match requirements and make all tests pass.
 
 [TestClass]
 public class TakingTurnsQueueTests
@@ -11,7 +11,10 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (5), Sue (3) and
     // run until the queue is empty
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, Sue, Tim, Tim
-    // Defect(s) Found: 
+    // Defect(s) Found:
+    // 1. PersonQueue.Enqueue() adds to front of list instead of back, causing LIFO instead of FIFO behavior
+    // 2. GetNextPerson() only re-adds person if Turns > 1, but should also re-add if Turns <= 0 (infinite)
+    // 3. GetNextPerson() decrements Turns for infinite turn people (Turns <= 0)
     public void TestTakingTurnsQueue_FiniteRepetition()
     {
         var bob = new Person("Bob", 2);
@@ -41,9 +44,12 @@ public class TakingTurnsQueueTests
 
     [TestMethod]
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (5), Sue (3)
-    // After running 5 times, add George with 3 turns.  Run until the queue is empty.
+    // After running 5 times, add George with 3 turns. Run until the queue is empty.
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, George, Sue, Tim, George, Tim, George
-    // Defect(s) Found: 
+    // Defect(s) Found:
+    // 1. Same defects as above: PersonQueue.Enqueue() adds to front instead of back
+    // 2. GetNextPerson() doesn't handle infinite turns (Turns <= 0) properly
+    // 3. People with infinite turns should never have their Turns value changed
     public void TestTakingTurnsQueue_AddPlayerMidway()
     {
         var bob = new Person("Bob", 2);
@@ -85,7 +91,10 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Bob (2), Tim (Forever), Sue (3)
     // Run 10 times.
     // Expected Result: Bob, Tim, Sue, Bob, Tim, Sue, Tim, Sue, Tim, Tim
-    // Defect(s) Found: 
+    // Defect(s) Found:
+    // 1. PersonQueue.Enqueue() adds to front of list, causing incorrect order
+    // 2. GetNextPerson() doesn't check for infinite turns (Turns <= 0) before decrementing
+    // 3. People with infinite turns (Turns <= 0) should be re-added to queue
     public void TestTakingTurnsQueue_ForeverZero()
     {
         var timTurns = 0;
@@ -116,7 +125,10 @@ public class TakingTurnsQueueTests
     // Scenario: Create a queue with the following people and turns: Tim (Forever), Sue (3)
     // Run 10 times.
     // Expected Result: Tim, Sue, Tim, Sue, Tim, Sue, Tim, Tim, Tim, Tim
-    // Defect(s) Found: 
+    // Defect(s) Found:
+    // 1. PersonQueue.Enqueue() adds to front instead of back (same issue)
+    // 2. GetNextPerson() doesn't handle negative turns as infinite properly
+    // 3. Negative turns (Turns <= 0) should indicate infinite turns and never be decremented
     public void TestTakingTurnsQueue_ForeverNegative()
     {
         var timTurns = -3;
@@ -143,7 +155,7 @@ public class TakingTurnsQueueTests
     [TestMethod]
     // Scenario: Try to get the next person from an empty queue
     // Expected Result: Exception should be thrown with appropriate error message.
-    // Defect(s) Found: 
+    // Defect(s) Found: None - this test passes as is
     public void TestTakingTurnsQueue_Empty()
     {
         var players = new TakingTurnsQueue();
